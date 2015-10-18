@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Archives: 2014/10 | day6&#39;s blog</title>
+  <title>Archives: 2015 | day6&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="day6's blog">
-<meta property="og:url" content="http://day6.github.io/archives/2014/10/">
+<meta property="og:url" content="http://day6.github.io/archives/2015/">
 <meta property="og:site_name" content="day6's blog">
 <meta property="og:description">
 <meta name="twitter:card" content="summary">
@@ -61,10 +61,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-The-maze-Runner" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-AQS" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2014/10/31/The-maze-Runner/" class="article-date">
-  <time datetime="2014-10-31T15:53:21.000Z" itemprop="datePublished">Oct 31 2014</time>
+    <a href="/2015/10/17/AQS/" class="article-date">
+  <time datetime="2015-10-17T06:39:48.000Z" itemprop="datePublished">Oct 17 2015</time>
 </a>
     
   </div>
@@ -75,7 +75,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2014/10/31/The-maze-Runner/">The maze Runner</a>
+      <a class="article-title" href="/2015/10/17/AQS/">AQS</a>
     </h1>
   
 
@@ -83,56 +83,58 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <pre><code>10月28日上映，看完预告片感觉跟饥饿游戏差不多！
-饥饿游戏，算是比较喜欢的类型：科幻、竞争、感情，从社会到个人，社会关系到进化！
-点赞：最后训练的日子，设计师设计的学舌鸟
-移动迷宫：整体性不如饥饿游戏
-</code></pre>
+        <h1 id="概述">概述</h1>
+<p> AQS java轻量级锁实现的基础,是实现接口LOCK的基础（lock/unlock, tryLock/unlock），常用方法acquire/release。可实现公平锁/非公平锁，公平锁即每次加锁都放入到CLH队列之后;非公平锁即先执行tryLock获取锁，如果获取不到则加入到CLH队列之后.然后使用LockSupport.park阻塞线程执行。当获得锁的线程执行完，调用LockSupport.unpark方法，唤醒阻塞在CLH队列中的下一个线程</p>
+<blockquote>
+<p>java普通对象都使用的对象锁，LockSupport则是基于Thread的，有效的解决了一个线程执行完成后，无法对指定的线程唤醒。</p>
+</blockquote>
+<h1 id="变量">变量</h1>
+<ol>
+<li>state<br>原子性状态值，是多种同步操作的基础</li>
+<li>head<br>基于unsafe:cas线程安全</li>
+<li>tail<br>同上</li>
+</ol>
+<h1 id="接口">接口</h1>
+<ol>
+<li>tryAcquire</li>
+<li>tryRelease</li>
+<li>tryAcquireShared</li>
+<li>tryReleaseShared</li>
+<li>isHeldExclusively</li>
+</ol>
+<h1 id="内部类_utilities">内部类 utilities</h1>
+<ol>
+<li>Node<br> CLH队列中的元素，每个节点保存下一节点的引用<figure class="highlight"><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="comment">*</span>           <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>  <span class="comment">prev</span> <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>         <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
+<span class="comment">*</span> <span class="comment">head</span> <span class="comment">|</span>          <span class="comment">|</span> &lt;<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span>   <span class="comment">|</span>         <span class="comment">|</span> &lt;<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span> <span class="comment">|</span>        <span class="comment">|</span>  <span class="comment">tail</span>
+<span class="comment">*</span>           <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>           <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>         <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
+</pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h1 id="AQS子类">AQS子类</h1>
+<ol>
+<li>ReentrantLock</li>
+<li>Semophore</li>
+<li>CountdownLutch</li>
+<li>ThreadPoolExcutor.work</li>
+</ol>
+<h1 id="USEAGE">USEAGE</h1>
+<ol>
+<li>调用lock 方法，阻塞调用线程，finally 中调用unlock</li>
+<li>lock,tryLock 区别是tryLock仅在调用时锁为空闲状态才获取该锁，非阻塞</li>
+</ol>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://day6.github.io/2014/10/31/The-maze-Runner/" data-id="1vpc39audwd4ggj6" class="article-share-link">Share</a>
+      <a data-url="http://day6.github.io/2015/10/17/AQS/" data-id="6331svm1i6iocvxc" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/movie/">movie</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA-多线程/">JAVA 多线程</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-女神的新衣" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2014/10/03/女神的新衣/" class="article-date">
-  <time datetime="2014-10-03T12:47:55.000Z" itemprop="datePublished">Oct 3 2014</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/10/03/女神的新衣/">女神的新衣</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>娱乐TV与电子商务的结合，经营一个社区结合电视节目。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://day6.github.io/2014/10/03/女神的新衣/" data-id="bkijy2a6m8ift5a2" class="article-share-link">Share</a>
-      
-      
     </footer>
   </div>
   
